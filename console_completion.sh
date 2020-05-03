@@ -82,4 +82,4 @@ __console_main() {
     return 0
 }
 
-complete -F __console_main console
+complete -F __console_main -o default console
