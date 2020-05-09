@@ -9,4 +9,4 @@ elif [ -f "$dir/app/console" ]; then
 else
     exit
 fi
-"$cmd" $@
+"$cmd" "$@"
