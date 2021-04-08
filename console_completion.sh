@@ -26,7 +26,7 @@ __display_progress() {
 }
 
 __generate_console_completion_cache_file() {
-    if [ -z "$(console -V)" ]; then
+    if [ -z "$(console -V 2>&1)" ]; then
         return
     fi
 
@@ -39,7 +39,7 @@ __generate_console_completion_cache_file() {
     fi
     local commands_list_filepath="$dir/.console/commands"
     console list --raw  | awk '{print $1}'>"$commands_list_filepath"
-    console -h --raw  | grep -o "\-\-[[:alnum:]\-]\{1,\}">"$dir/.console/options/default_console_options"
+    console -h --raw  | grep -o "\-\-[^\=\ ]\{1,\}">"$dir/.console/options/default_console_options"
     line_number=$(wc <"$commands_list_filepath" -l)
     declare -i i=0
     while IFS= read -r cmd; do
@@ -47,13 +47,13 @@ __generate_console_completion_cache_file() {
             mkdir "$dir/.console/options/$cmd"
         fi
         ((i = i + 1))
-        console "$cmd" -h --raw  | grep -o "\-\-[[:alnum:]\-]\{1,\}">"$dir/.console/options/$cmd/options"
+        console "$cmd" -h --raw  | grep -o "\-\-[^\=\ ]\{1,\}">"$dir/.console/options/$cmd/options"
         __display_progress $line_number $i
     done <"$commands_list_filepath"
 }
 
 __console_main() {
-    if [ -z "$(console -V)" ]; then
+    if [ -z "$(console -V 2>&1)" ]; then
         return
     fi
     local dir="$(pwd)"
